@@ -12,9 +12,17 @@ The following API endpoints are implemented:
 
 This view would start step 1 of the OAuth, which will prompt the user for his/her credentials.
 
+**This link redirects to authorization url.**
+
+![Untitled](Google%20Calendar%20Integration%20using%20Django%20REST%20API%20ef4224e90d3d48ab83756d6afba91b75/Untitled.png)
+
 ### **/rest/v1/calendar/redirect/ -> GoogleCalendarRedirectView()**
 
 ### [`https://convin-backend-task.ayushr1.repl.co/rest/v1/calendar/redirect/`](https://convin-backend-task.ayushr1.repl.co/rest/v1/calendar/redirect/)
+
+If logged in user
+
+![Untitled](Google%20Calendar%20Integration%20using%20Django%20REST%20API%20ef4224e90d3d48ab83756d6afba91b75/Untitled%201.png)
 
 This view will do two things:
 
@@ -36,3 +44,7 @@ The submission is shared as a public Repl.it environment and as a Github repo he
 # Notes
 
 The API is currently deployed on testing stage with external scope which is limited to authorised test users. Production requires verification with the use mentioned apis of google calendar.
+
+# Video
+
+[https://youtu.be/fujSHAaoGRA](https://youtu.be/fujSHAaoGRA)
