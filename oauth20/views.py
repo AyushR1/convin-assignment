@@ -13,7 +13,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 CREDENTIALS_SECRET = "credentials.json"
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-REDIRECT = 'https://convin-backend-task.ayushr1.repl.co/rest/v1/calendar/redirect'
+REDIRECT = 'http://127.0.0.1:8000/rest/v1/calendar/redirect'
 
 
 def index(request):
@@ -40,41 +40,45 @@ def GoogleCalendarInitView(request):
 
 @api_view(['GET'])
 def GoogleCalendarRedirectView(request):
-    state = request.session['state']
+    try:
+        state = request.session['state']
 
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CREDENTIALS_SECRET, scopes=SCOPES, state=state)
-    flow.redirect_uri = REDIRECT
+        flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+            CREDENTIALS_SECRET, scopes=SCOPES, state=state)
+        flow.redirect_uri = REDIRECT
 
-    authorization_response = request.get_full_path()
-    flow.fetch_token(authorization_response=authorization_response)
+        authorization_response = request.get_full_path()
+        flow.fetch_token(authorization_response=authorization_response)
 
-    credentials = flow.credentials
-    request.session['credentials'] = credentials_to_dict(credentials)
+        credentials = flow.credentials
+        request.session['credentials'] = credentials_to_dict(credentials)
 
-    if 'credentials' not in request.session:
-        return redirect('v1/calendar/init')
+        if 'credentials' not in request.session:
+            return redirect('v1/calendar/init')
 
-    credentials = google.oauth2.credentials.Credentials(
-        **request.session['credentials'])
+        credentials = google.oauth2.credentials.Credentials(
+            **request.session['credentials'])
 
-    service = googleapiclient.discovery.build(
-        'calendar', 'v3', credentials=credentials, static_discovery=False)
+        service = googleapiclient.discovery.build(
+            'calendar', 'v3', credentials=credentials, static_discovery=False)
 
-    calendar_list = service.calendarList().list().execute()
+        calendar_list = service.calendarList().list().execute()
 
-    calendar_id = calendar_list['items'][0]['id']
+        calendar_id = calendar_list['items'][0]['id']
 
-    events = service.events().list(calendarId=calendar_id).execute()
+        events = service.events().list(calendarId=calendar_id).execute()
 
-    events_list_append = []
-    if not events['items']:
-        print('No data found.')
-        return Response({"message": "No data found or user credentials invalid."})
-    else:
-        for events_list in events['items']:
-            events_list_append.append(events_list)
-        return Response({"events": events_list_append})
+        events_list_append = []
+        if not events['items']:
+            print('No data found.')
+            return Response({"message": "No data found or user credentials invalid."})
+        else:
+            for events_list in events['items']:
+                events_list_append.append(events_list)
+            return Response({"events": events_list_append})
+    except:
+        button_html = '<a href="https://convin-backend-task.ayushr1.repl.co/rest/v1/calendar/init/">Error Please Login again</a>'
+        return HttpResponse(button_html)
 
 
 def credentials_to_dict(credentials):
