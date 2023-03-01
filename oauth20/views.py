@@ -13,7 +13,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 CREDENTIALS_SECRET = "credentials.json"
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-REDIRECT = 'http://127.0.0.1:8000/rest/v1/calendar/redirect'
+REDIRECT = 'https://convin-backend-task.ayushr1.repl.co/rest/v1/calendar/redirect'
 
 
 def index(request):
