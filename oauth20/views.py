@@ -59,7 +59,7 @@ def GoogleCalendarRedirectView(request):
         **request.session['credentials'])
 
     service = googleapiclient.discovery.build(
-        'calendar', 'v3', credentials=credentials)
+        'calendar', 'v3', credentials=credentials, static_discovery=False)
 
     calendar_list = service.calendarList().list().execute()
 
